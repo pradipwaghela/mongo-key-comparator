@@ -21,7 +21,7 @@ Mongo Key Comparator is a Node.js tool designed to compare keys between collecti
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/your-username/mongo-key-comparator.git
+   git clone[ https://github.com/your-username/mongo-key-comparator.git](https://github.com/pradipwaghela/mongo-key-comparator)
    cd mongo-key-comparator
    ```
 
