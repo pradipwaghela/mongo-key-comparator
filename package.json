@@ -12,7 +12,6 @@
     "csv": "^6.3.10",
     "csv-stringify": "^6.5.1",
     "dotenv": "^16.4.5",
-    "json2csv": "^6.0.0-alpha.2",
     "mongodb": "^6.8.0"
   }
 }

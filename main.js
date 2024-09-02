@@ -5,34 +5,12 @@ const fs = require("fs");
 const path = require("path");
 const { stringify } = require("csv-stringify/sync");
 var uri = process.env.DATABASE_URL ?? "mongodb://localhost:27017/";
-const { parse } = require("json2csv");
 
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-async function compareCollectionsOLD(olddb, newdb, collectionName) {
-  const oldCollection = olddb.collection(collectionName);
-  const newCollection = newdb.collection(collectionName);
 
-  const oldKeys = await getUniqueKeys(oldCollection);
-  const newKeys = await getUniqueKeys(newCollection);
-
-  const addedKeys = new Set([...newKeys].filter((key) => !oldKeys.has(key)));
-
-  const removedKeys = new Set([...oldKeys].filter((key) => !newKeys.has(key)));
-  console.log(
-    `\n **********${collectionName} Collection Key Compare**********\n `,
-    "\n----------Old collection keys---------- \n",
-    oldKeys,
-    "\n ----------New Collection Keys----------\n",
-    newKeys,
-    "\n---------- New  Keys---------\n",
-    [...addedKeys],
-    "\n---------- Removed  Keys---------\n",
-    [...removedKeys]
-  );
-}
 async function getUniqueKeys(collection) {
   const keys = await collection
     .aggregate([
@@ -87,7 +65,8 @@ async function compareCollections(olddb, newdb, collectionName) {
 
   const oldallkeys = await getAllUniqueKeys(oldCollection);
   const newallkeys = await getAllUniqueKeys(newCollection);
-
+   
+  const outputDir = process.env.OUTPUT_FOLDER ?? __dirname
   const addedKeys = new Set(
     [...newallkeys].filter((key) => !oldallkeys.has(key))
   );
@@ -95,10 +74,7 @@ async function compareCollections(olddb, newdb, collectionName) {
   const removedKeys = new Set(
     [...oldallkeys].filter((key) => !newallkeys.has(key))
   );
-  // const addedKeysArray = Array.isArray(addedKeys) ? addedKeys : [];
-  // const removedKeysArray = Array.isArray(removedKeys) ? removedKeys : [];
-  // const addedKeysArray = Array.from(addedKeys)
-  // const removedKeysArray = Array.from(removedKeys)
+
 
   const data = {
     "Old Collection Keys": [...oldallkeys],
@@ -122,7 +98,7 @@ async function compareCollections(olddb, newdb, collectionName) {
     quoted: true,
     delimiter: ",",
   });
-  const outputDir = path.join(__dirname, "MOW_V1_V2_collection_comparisons");
+
   if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir);
   }
@@ -157,8 +133,8 @@ async function run() {
     const new_database = client.db(newdatabase);
 
     for (const collectionName of collection_list) {
-      console.log(collectionName)
-      // await compareCollections(old_database, new_database, collectionName);
+
+      await compareCollections(old_database, new_database, collectionName);
     }
   } catch (error) {
     console.log("error ", error);
