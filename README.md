@@ -33,8 +33,8 @@ Mongo Key Comparator is a Node.js tool designed to compare keys between collecti
 
     ```bash
     DATABASE_URL=mongodb://127.0.0.1:27017
-    OLD_DATABASE=mixit-dbv1
-    NEW_DATABASE=mixit-db
+    OLD_DATABASE=db1
+    NEW_DATABASE=db2
     OUTPUT_FOLDER=./collection_comparisons
     COLLECTIONS=users,tokens
     ```
